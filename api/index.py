@@ -2,14 +2,14 @@
 import requests
 import os
 
-from flask import Flask, request, abort
+from fastapi import FastAPI, Request, HTTPException
 from linebot import LineBotApi, WebhookHandler
 from linebot.exceptions import InvalidSignatureError
 from linebot.models import MessageEvent, TextMessage, TextSendMessage
 
 
-# Flask
-app = Flask(__name__)
+# FastAPI
+app = FastAPI()
 
 # OpenAI
 api_key = os.getenv("OPENAI_API_KEY")
@@ -19,19 +19,19 @@ line_bot_api = LineBotApi(os.getenv("LINE_CHANNEL_ACCESS_TOKEN"))
 handler = WebhookHandler(os.getenv("LINE_CHANNEL_SECRET"))
 
 
-@app.route("/")
+@app.get("/")
 def index():
     return "OK"
 
 
-@app.route("/webhook", methods=["POST"])
-def webhook():
-    signature = request.headers['X-Line-Signature']
-    body = request.get_data(as_text=True)
+@app.post("/webhook")
+async def webhook(request: Request):
+    signature = request.headers["X-Line-Signature"]
+    body = await request.body()
     try:
-        handler.handle(body, signature)
+        handler.handle(body.decode(), signature)
     except InvalidSignatureError:
-        abort(400)
+        raise HTTPException(status_code=400, detail="Missing Parameters")
     return "OK"
 
 
