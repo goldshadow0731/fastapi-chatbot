@@ -35,7 +35,7 @@ async def webhook(request: Request):
     return "OK"
 
 
-@handler.add()
+@handler.add(event=MessageEvent, message=TextMessage)
 def message_handler(event: MessageEvent):
     response = requests.post(
         url="https://api.openai.com/v1/completions",
