@@ -6,7 +6,6 @@ from fastapi import FastAPI, Request, HTTPException
 from linebot import LineBotApi, WebhookHandler
 from linebot.exceptions import InvalidSignatureError
 from linebot.models import MessageEvent, TextMessage, TextSendMessage
-import uvicorn
 
 
 # FastAPI
@@ -57,7 +56,3 @@ def message_handler(event: MessageEvent):
             text=response.json()["choices"][0]["text"].lstrip("\n")
         )
     )
-
-
-if __name__ == "__main__":
-    uvicorn.run(app=app, host="0.0.0.0")
