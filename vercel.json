@@ -1,7 +1,7 @@
 {
     "functions": {
         "api/app.py": {
-            "runtime": "vercel-php@0.1.0",
+            "runtime": "@vercel/python",
             "memory": 1024
         }
     },
