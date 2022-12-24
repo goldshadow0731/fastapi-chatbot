@@ -17,7 +17,7 @@ api_key = os.getenv("OPENAI_API_KEY")
 
 # Line Bot
 line_bot_api = LineBotApi(os.getenv("LINE_CHANNEL_ACCESS_TOKEN"))
-handler = WebhookHandler(os.getenv("LINE_CHANNEL_SECRET"))
+line_handler = WebhookHandler(os.getenv("LINE_CHANNEL_SECRET"))
 
 
 @app.get("/")
@@ -30,13 +30,13 @@ async def webhook(request: Request):
     signature = request.headers["X-Line-Signature"]
     body = await request.body()
     try:
-        handler.handle(body.decode(), signature)
+        line_handler.handle(body.decode(), signature)
     except InvalidSignatureError:
         raise HTTPException(status_code=400, detail="Missing Parameters")
     return "OK"
 
 
-@handler.add(event=MessageEvent, message=TextMessage)
+@line_handler.add(event=MessageEvent, message=TextMessage)
 def message_handler(event: MessageEvent):
     response = requests.post(
         url="https://api.openai.com/v1/completions",
