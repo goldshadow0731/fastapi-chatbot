@@ -1,0 +1,14 @@
+{
+    "functions": {
+        "api/app.py": {
+            "runtime": "vercel-php@0.1.0",
+            "memory": 1024
+        }
+    },
+    "rewrites": [
+        {
+            "source": "/(.*)",
+            "destination": "api/index.py"
+        }
+    ]
+}
