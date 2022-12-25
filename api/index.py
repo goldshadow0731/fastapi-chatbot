@@ -29,15 +29,15 @@ async def webhook(request: Request):
     signature = request.headers["X-Line-Signature"]
     body = await request.body()
     try:
-        line_handler.handle(body.decode(), signature)
+        await line_handler.handle(body.decode(), signature)
     except InvalidSignatureError:
         raise HTTPException(status_code=400, detail="Missing Parameters")
     return "OK"
 
 
 @line_handler.add(event=MessageEvent, message=TextMessage)
-def message_handler(event: MessageEvent):
-    response = requests.post(
+async def message_handler(event: MessageEvent):
+    response = await requests.post(
         url="https://api.openai.com/v1/completions",
         headers={
             "Authorization": f"Bearer {api_key}"
