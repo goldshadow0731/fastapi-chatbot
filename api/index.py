@@ -29,7 +29,7 @@ async def webhook(request: Request):
     signature = request.headers["X-Line-Signature"]
     body = await request.body()
     try:
-        await line_handler.handle(body.decode(), signature)
+        line_handler.handle(body.decode(), signature)
     except InvalidSignatureError:
         raise HTTPException(status_code=400, detail="Missing Parameters")
     return "OK"
